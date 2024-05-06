@@ -1,4 +1,4 @@
-import React, { useState , useRef, useEffect  } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from 'axios';
 
 // import { addClass, useExternalScripts } from "./UseExternalScripts.js"
@@ -13,14 +13,15 @@ import SelectOptions from "../Components/SelectOptions.js"
 
 
 function SSLChecker(props) {
-    const [domain, setDomain] = useState('');
+    const [domain, setDomain] = useState('akto.io');
     const [inputValue, setinputValue] = useState("")
     const [response, setResponse] = useState(null);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:4000/check-ssl', { inputValue});
+            const res = await axios.post('http://localhost:4000/check-ssl', { domain });
             setResponse(res.data);
             setoutputValue(
                 res.data
@@ -29,9 +30,8 @@ function SSLChecker(props) {
             console.error('Error:', error);
         }
     }
-    const handleButtonClick = () => {
-        
-    }
+
+
 
     // useExternalScripts(
     //     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -41,7 +41,7 @@ function SSLChecker(props) {
     //     "https://d1hvi6xs55woen.cloudfront.net/website-assets/polaris.css"
     // )
 
-    
+
     const [outputValue, setoutputValue] = useState("")
     const [isError, setError] = useState(false)
     const [isClicked, setIsClicked] = useState(false)
@@ -116,6 +116,7 @@ function SSLChecker(props) {
     const handleInputChange = (event) => {
         // Update input when textarea-input changes
         setinputValue(event.target.value);
+        setDomain(event.target.value)
     };
 
 
@@ -133,8 +134,7 @@ function SSLChecker(props) {
             link.click()
         }
     }
-
-    
+    console.log(inputValue)
     console.log(outputValue)
     console.log(response)
     const styles = {
@@ -241,7 +241,7 @@ function SSLChecker(props) {
                                             >
                                                 {" "}
                                             </textarea>
-                                            
+
                                             <div
                                                 aria-hidden="true"
                                                 className="Polaris-TextField__Resizer"
@@ -250,7 +250,7 @@ function SSLChecker(props) {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div style={{ width: "fit-content" }}>
                                 <Button
                                     onClick={handleSubmit}
@@ -261,14 +261,14 @@ function SSLChecker(props) {
 
 
                             <div className="editor">
-                                <div className="Polaris-Labelled__LabelWrapper">
+                                {/* <div className="Polaris-Labelled__LabelWrapper">
                                     <div className="Polaris-Label">
                                         <label className="Polaris-Label__Text">
                                             {" "}
                                             Output{" "}
                                         </label>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="Polaris-Connected">
                                     <div className="Polaris-Connected__Item Polaris-Connected__Item--primary">
@@ -276,114 +276,77 @@ function SSLChecker(props) {
                                             className="Polaris-TextField Polaris-TextField--hasValue Polaris-TextField--multiline"
                                             style={{ position: "relative" }}
                                         >
-                                            <textarea
-                                                multiline="true"
-                                                value={outputValue}
-                                                placeholder={props.sample_text}
-                                                readOnly={true}
-                                                className="Polaris-TextField__Input"
-                                                spellCheck="false"
-                                                type="text"
-                                                rows="4"
-                                                style={styles.textboxborder2}
-                                            ></textarea>
-                                            <div style={iconStyles}>
-                                                <div
-                                                    ref={copyBtnRef}
-                                                    onClick={copyToClipboard}
-                                                    style={{
-                                                        cursor: "pointer",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        padding: "8px 12px",
-                                                    }}
-                                                    onMouseEnter={
-                                                        handleMouseOver
-                                                    }
-                                                    onMouseLeave={
-                                                        handleMouseLeave
-                                                    }
-                                                >
-                                                    <i
-                                                        class="fa fa-file fa-2x"
-                                                        style={{
-                                                            cursor: "pointer",
-                                                            fontSize: "20px",
-                                                        }}
-                                                    ></i>
-                                                    {onHoverActive ? (
-                                                        <div
-                                                            className="Polaris-PositionedOverlay Polaris-Card"
-                                                            style={{
-                                                                transform: `translate(-30px, -35px)`,
-                                                                padding: "8px",
-                                                                position:
-                                                                    "absolute",
-                                                            }}
-                                                        >
-                                                            {!copiedText
-                                                                ? "Copy to clipboard"
-                                                                : "Copied!!"}{" "}
-                                                        </div>
-                                                    ) : null}
-                                                </div>
-                                            </div>
-                                            <div
-                                                aria-hidden="true"
-                                                className="Polaris-TextField__Resizer"
-                                            ></div>
-                                        </div>
+                                            {!response &&
+                                                <textarea
+                                                    multiline="true"
+                                                    value={outputValue}
+                                                    placeholder= "A common SSL certificate covers sites and the IP address. If unsure, any option should work. Default port is 443. We'll flag SSL errors. The certificate is issued by [authority] and expires on [expiration date]. Advanced section offers technical details."
+                                            readOnly={true}
+                                            className="Polaris-TextField__Input"
+                                            spellCheck="false"
+                                            type="text"
+                                            rows="2"
+                                            style={styles.textboxborder2}
+                                                ></textarea>
+
+                                            }
+
+                                        {response &&
+                                            <table style={{ borderCollapse: 'collapse', fontFamily: 'Roboto, sans-serif', fontSize: '22px', margin: '2px', padding: '2px' }}>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Validity</td>
+                                                        <td style={{ border: '1px solid #888', padding: '8px' }}>{response.valid ? 'Valid' : 'Invalid'}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Days Remaining</td>
+                                                        <td style={{ border: '1px solid #888', padding: '8px' }}>{response.daysRemaining}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid From</td>
+                                                        <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFrom}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid To</td>
+                                                        <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validTo}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid For</td>
+                                                        <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFor.join(', ')}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        }
+
+                                        <div
+                                            aria-hidden="true"
+                                            className="Polaris-TextField__Resizer"
+                                        ></div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
                 </div>
-                <div
-                    style={{
-                        background: "#fafafb",
-                        padding: "20px",
-                        width: "100%",
-                    }}
-                >
-                    <img
-                        src="https://akto-setup.s3.amazonaws.com/templates/128x128.png"
-                        alt="Akto.io"
-                        style={{ height: "24px" }}
-                    />
-                </div>
+            </div>
+            <div
+                style={{
+                    background: "#fafafb",
+                    padding: "20px",
+                    width: "100%",
+                }}
+            >
+                <img
+                    src="https://akto-setup.s3.amazonaws.com/templates/128x128.png"
+                    alt="Akto.io"
+                    style={{ height: "24px" }}
+                />
             </div>
         </div>
+        </div >
     )
 }
 
 
 export default SSLChecker;
- 
-// // {response &&
-// //     <table style={{ borderCollapse: 'collapse', fontFamily: 'Roboto, sans-serif', fontSize: '22px', margin: '2px', padding: '2px' }}>
-// //         <tbody>
-// //             <tr>
-// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Validity</td>
-// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.valid ? 'Valid' : 'Invalid'}</td>
-// //             </tr>
-// //             <tr>
-// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Days Remaining</td>
-// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.daysRemaining}</td>
-// //             </tr>
-// //             <tr>
-// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid From</td>
-// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFrom}</td>
-// //             </tr>
-// //             <tr>
-// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid To</td>
-// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validTo}</td>
-// //             </tr>
-// //             <tr>
-// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid For</td>
-// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFor.join(', ')}</td>
-// //             </tr>
-// //         </tbody>
-// //     </table>
-// // }
