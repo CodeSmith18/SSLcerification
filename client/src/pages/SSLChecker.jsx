@@ -120,6 +120,7 @@ function SSLChecker(props) {
             padding: '8px',
             fontWeight: "bold",
             textAlign: "left",
+            borderRadius: "7px", // Add border radius here
         },
         evenRow: {
             backgroundColor: "#f2f2f2",
@@ -178,10 +179,10 @@ function SSLChecker(props) {
                                             ></textarea>
                                         }
                                         {response &&
-                                            <table style={{borderRadius:'15px',paddingLeft:"5px"}}>
+                                            <table >
                                                 <tbody>
-                                                    <tr>
-                                                        <td style={styles.outputCell}>Validity</td>
+                                                    <tr >
+                                                        <td style={styles.outputCell }>Validity</td>
                                                         <td style={styles.outputCell}>{response.valid ? 'Valid' : 'Invalid'}</td>
                                                     </tr>
                                                     <tr>
