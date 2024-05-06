@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState , useRef, useEffect  } from "react";
 import axios from 'axios';
-import  { useRef, useEffect } from "react"
+
 // import { addClass, useExternalScripts } from "./UseExternalScripts.js"
 import clipboardCopy from "clipboard-copy";
 
@@ -8,22 +8,30 @@ import { ReactComponent as Copy } from "../icons/ClipboardIcon.svg";
 import { ReactComponent as Save } from "../icons/PageDownIcon.svg";
 
 // import { addPropertyControls, ControlType } from "framer"
-import Button from "./Components/Button.js"
+import Button from "../Components/Button.js"
 import SelectOptions from "../Components/SelectOptions.js"
 
 
 function SSLChecker(props) {
     const [domain, setDomain] = useState('');
+    const [inputValue, setinputValue] = useState("")
     const [response, setResponse] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:4000/check-ssl', { domain });
+            const res = await axios.post('http://localhost:4000/check-ssl', { inputValue});
             setResponse(res.data);
+            setoutputValue(
+                res.data
+            )
         } catch (error) {
             console.error('Error:', error);
         }
+    }
+    const handleButtonClick = () => {
+        
+    }
 
     // useExternalScripts(
     //     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -33,11 +41,12 @@ function SSLChecker(props) {
     //     "https://d1hvi6xs55woen.cloudfront.net/website-assets/polaris.css"
     // )
 
-    const [inputValue, setinputValue] = useState("")
+    
     const [outputValue, setoutputValue] = useState("")
     const [isError, setError] = useState(false)
     const [isClicked, setIsClicked] = useState(false)
     const [flags, setFlags] = useState("")
+
 
     ///my code
     useEffect(() => {
@@ -125,83 +134,9 @@ function SSLChecker(props) {
         }
     }
 
-    const handleButtonClick = () => {
-        setoutputValue(
-            generateRandomStuff()
-        )
-    }
-    const generateRandomStuff = () => {
-        var inputString = inputValue.toString();
-        if (inputString.length === 0) {
-            return "Enter a Non-Empty string...";
-        }
-       
-        switch (props.purpose.toLowerCase()) {
-
-            // case "md5":
-            //     const md5Hash = CryptoJS.MD5(inputString);
-            //     return md5Hash;
-            //     break;
-
-            // case "sha-1":
-            //     const sha1Hash = CryptoJS.SHA1(inputString);
-            //     return sha1Hash;
-            //     break;
-            // case "sha-3":
-            //     const sha3Hash = CryptoJS.SHA3(inputString, { outputLength: 512 });
-            //     return sha3Hash;
-            //     break;
-
-            // case "sha-256":
-            //     const sha256Hash = CryptoJS.SHA256(inputString);
-            //     return sha256Hash;
-            //     break;
-
-            // case "sha-512":
-            //     const sha512Hash = CryptoJS.SHA512(inputString);
-            //     return sha512Hash;
-            //     break;
-
-            // case "ripemd-160":
-            //     const ripemd160Hash = CryptoJS.RIPEMD160(inputString).toString();
-            //     return ripemd160Hash;
-            //     break;
-
-            // case "hmac-md5":
-            //     const hmacMd5Hash = CryptoJS.HmacMD5(inputString, "Secret Passphrase").toString();
-            //     return hmacMd5Hash;
-            //     break;
-            // case "hmac-sha1":
-            //     const hmacSha1Hash = CryptoJS.HmacSHA1(inputString, "Secret Passphrase").toString();
-            //     return hmacSha1Hash;
-            //     break;
-            // case "hmac-sha256":
-            //     const hmacSha256Hash = CryptoJS.HmacSHA256(inputString, "Secret Passphrase").toString();
-            //     return hmacSha256Hash;
-            //     break;
-            // case "hmac-sha512":
-            //     const hmacSha512Hash = CryptoJS.HmacSHA512(inputString, "Secret Passphrase").toString();
-            //     return hmacSha512Hash;
-            //     break;
-            // case "aes":
-            //     const aesHash = CryptoJS.AES.encrypt(inputString, "Secret Passphrase").toString();
-            //     return aesHash;
-            //     break;
-            // case "rabbit":
-            //     const rabbitHash = CryptoJS.Rabbit.encrypt(inputString, "Secret Passphrase").toString();
-            //     return rabbitHash;
-            //     break;
-            // case "rc4":
-            //     var rc4Hash = CryptoJS.RC4.encrypt(inputString, "Secret Passphrase").toString();
-            //     return rc4Hash;
-            //     break;
-            // case "rc4-drop":
-            //     var rc4DropHash = CryptoJS.RC4Drop.encrypt(inputString, "Secret Passphrase").toString();
-            //     return rc4DropHash;
-            //     break;
-        }
-    }
-
+    
+    console.log(outputValue)
+    console.log(response)
     const styles = {
         textboxborder: {
             padding: "20px",
@@ -239,7 +174,7 @@ function SSLChecker(props) {
 
     return (
         <div>
-            <h1> {props.purpose} Hash Generator </h1>
+            <h1> SSL Checker </h1>
             <div
                 className="Polaris-Card"
                 style={{
@@ -279,7 +214,7 @@ function SSLChecker(props) {
                                     <div className="Polaris-Label">
                                         <label className="Polaris-Label__Text">
                                             {" "}
-                                            Input{" "}
+                                            Input URL{" "}
                                         </label>
                                     </div>
                                 </div>
@@ -297,11 +232,11 @@ function SSLChecker(props) {
 
                                                 value={inputValue}
                                                 onChange={handleInputChange}
-                                                placeholder="Please enter string here..."
+                                                placeholder="Please enter URL here..."
                                                 className="Polaris-TextField__Input  "
                                                 spellCheck="false"
                                                 type="text"
-                                                rows="4"
+                                                rows="1"
                                                 style={styles.textboxborder2}
                                             >
                                                 {" "}
@@ -318,7 +253,7 @@ function SSLChecker(props) {
                             
                             <div style={{ width: "fit-content" }}>
                                 <Button
-                                    onClick={handleButtonClick}
+                                    onClick={handleSubmit}
                                     isPrimary={true}
                                     buttonText="Generate"
                                 />
@@ -422,33 +357,33 @@ function SSLChecker(props) {
         </div>
     )
 }
-};
+
 
 export default SSLChecker;
  
-// {response &&
-//     <table style={{ borderCollapse: 'collapse', fontFamily: 'Roboto, sans-serif', fontSize: '22px', margin: '2px', padding: '2px' }}>
-//         <tbody>
-//             <tr>
-//                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Validity</td>
-//                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.valid ? 'Valid' : 'Invalid'}</td>
-//             </tr>
-//             <tr>
-//                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Days Remaining</td>
-//                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.daysRemaining}</td>
-//             </tr>
-//             <tr>
-//                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid From</td>
-//                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFrom}</td>
-//             </tr>
-//             <tr>
-//                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid To</td>
-//                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validTo}</td>
-//             </tr>
-//             <tr>
-//                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid For</td>
-//                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFor.join(', ')}</td>
-//             </tr>
-//         </tbody>
-//     </table>
-// }
+// // {response &&
+// //     <table style={{ borderCollapse: 'collapse', fontFamily: 'Roboto, sans-serif', fontSize: '22px', margin: '2px', padding: '2px' }}>
+// //         <tbody>
+// //             <tr>
+// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Validity</td>
+// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.valid ? 'Valid' : 'Invalid'}</td>
+// //             </tr>
+// //             <tr>
+// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Days Remaining</td>
+// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.daysRemaining}</td>
+// //             </tr>
+// //             <tr>
+// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid From</td>
+// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFrom}</td>
+// //             </tr>
+// //             <tr>
+// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid To</td>
+// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validTo}</td>
+// //             </tr>
+// //             <tr>
+// //                 <td style={{ border: '1px solid #888', padding: '8px', fontWeight: "bold" }}>Valid For</td>
+// //                 <td style={{ border: '1px solid #888', padding: '8px' }}>{response.validFor.join(', ')}</td>
+// //             </tr>
+// //         </tbody>
+// //     </table>
+// // }
